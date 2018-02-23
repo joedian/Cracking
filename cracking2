@@ -1,0 +1,328 @@
+package com.company;
+
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+public class Main {
+
+    public static void main(String[] args) {
+	    // write your code here
+        // System.out.println(powerSet(new int[]{1,2,8,6,4}));
+        //System.out.println(primesSieve(36));
+        //System.out.print(VowelSquare(new String[]{"gg", "ff"}));//"aqrst", "ukaei", "ffooo"}));
+        
+        MyLinkedList a = new MyLinkedList(6);
+        a.add(1);
+        a.add(7);
+        a.add(9);
+        a.add(5);
+
+        MyLinkedList b = new MyLinkedList(2);
+        b.add(9);
+        b.add(5);
+        b.add(9);
+        b.add(5);
+        
+        MyNode node = new MyNode(1);
+        node.next = new MyNode(2);
+        node.next.next = new MyNode(3);
+
+        MyNode node2 = new MyNode(9);
+        node2.next = new MyNode(8);
+        node2.next.next = new MyNode(7);
+
+        // System.out.println(sumLinkedLists(node, node2));        
+       // System.out.println(reverseLinkedList(node));
+        System.out.println(insertInSorted(node, 5));
+    }
+    
+    private static MyNode insertInSorted(MyNode node, int i ){
+        if(node == null)
+            return node;
+        
+        MyNode temp = node;
+        MyNode prev = node;
+        
+        while(node != null){
+            temp = node;
+            if(node.val < i  && node.next == null){
+                node.next = new MyNode(i);               
+                break;
+            }
+            
+            if(node.val < i && node.next.val > i){           
+                node.next = new MyNode(i);
+                node.next.next = temp;
+               // break;
+            }
+            node = node.next;
+            prev.next = node.next;
+        }
+        
+        while (node != null){
+            System.out.println(node.val);
+            node = node.next;
+        }
+        
+        return node;
+    }
+
+    /**
+     * 1 - 2 - 3
+     * 3 - 2 - 1
+     * @param input
+     * @return
+     */
+    private static  MyNode reverseLinkedList(MyNode input){        
+        if(input == null)
+            return input;
+        
+        MyNode prev = null;
+        MyNode curr = input;
+        
+        while(curr != null){
+            MyNode temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+        }
+        
+        while (prev != null){
+            System.out.println(prev.val);
+            prev = prev.next;
+        }
+        input = prev;
+        return input;
+    }
+
+    /**
+     * 
+      * @param linkedList
+     * @return
+     */ 
+    public static boolean linkedPalindrome(LinkedList<Integer> linkedList){
+        Integer n = linkedList.getFirst();
+        StringBuffer buffer = new StringBuffer();
+        
+        if(n == null)
+            return false;
+            
+       /* for(Object s : linkedList){
+            
+        }*/
+       //print letters in order
+        //revers and check
+        return false;
+    }
+    
+   
+    /**
+     * input (7-> 1-> 6) + (5 -> 9 -> 2)
+     *  = 617 + 295
+     *  = 912
+     * @param a
+     * @param b
+     * @return
+     */
+    public static Integer sumLinkedLists(MyNode a, MyNode b ){
+        Integer sum = new Integer(0);
+   
+        StringBuilder s =  new StringBuilder(getNumber(a)).reverse();
+        System.out.println(s.toString());
+        StringBuilder t = new StringBuilder(getNumber(b)).reverse();
+        System.out.println(t.toString());
+        
+        sum = Integer.valueOf(s.toString()).intValue()  + Integer.valueOf( t.toString()).intValue();
+        
+        return sum;
+    }
+    
+    private static String getNumber(MyNode curr){
+        String s = "";   
+        while(curr != null) {
+            s = s +  curr.val + "";
+            curr = curr.next;
+        }
+        return s;
+    }
+
+    protected static class MyNode{
+        int val;
+        MyNode next;
+        
+        public MyNode(int i ){
+            val = i;
+            next = null;
+        }
+
+        @Override
+        public String toString() {
+            return val+ ", ";
+        }
+    }
+    
+    protected static class MyLinkedList {
+        Integer value;
+        Node next;
+        int size;
+        
+        MyLinkedList(Integer i ){
+            this.value = i;
+            this.size++;
+        }
+        
+        void add(Integer i ){
+            this.size++;           
+            this.next = new Node(this.value, null);
+            this.value = i;
+        }
+        
+        private static class Node {        
+            Node next;
+            Integer value;
+
+            public Node(Integer val,Node next){
+                this.value = val;               
+                this.next = next;
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param strArrays
+     * @return
+     */
+    public static String VowelSquare(String[] strArrays) {
+   /*       
+       Input:"aqrst", 
+             "ukaei", 
+             "ffooo"
+
+        Output:"1-2"
+       */
+    
+        String ans = "";
+        String vowels = "aeiou";
+        boolean valid = true;
+     
+        char[][] charArrays = new char[strArrays.length][strArrays.length];
+        
+        //System.out.println(Arrays.toString(strArrays));
+        
+        Boolean[][] flagArrays = new Boolean[strArrays.length][strArrays.length];
+        
+        for (int i = 0; i < strArrays.length ; i++) {
+            charArrays[i] = (strArrays[i]).toCharArray();
+        }
+        //System.out.println(Arrays.toString(charArrays));
+        //check each one and neighbours
+        for (int i = 0; i < charArrays.length - 1; i++) {
+            char[] currentArray = charArrays[i];
+            char[] nextArray = charArrays[i + 1];
+            //System.out.println(Arrays.toString( currentArray));
+            for (int j = 0; j < currentArray.length-1 ; j++) {
+                valid = true;
+                if(vowels.contains(currentArray[j] + "")){
+                   // System.out.println(" is vowel " + currentArray[j]  );
+                    //check right
+                    if(!vowels.contains(currentArray[j + 1] + "")
+                            ){
+                        valid = false;
+                    }
+                    // check bottom left
+                    if(!vowels.contains(nextArray[j] + "")
+                            ){
+                        valid = false;
+                    }
+                    //check bottom right
+                    if(!vowels.contains(nextArray[j + 1] + "")
+                            ){
+                        valid = false;
+                    }
+                }else{
+                    valid = false;                    
+                }
+                
+                if(valid) {
+                    ans = i + "-" + j;
+                    break;
+                }
+            }
+           
+           if(valid)
+               break;
+        }
+        if(!valid)
+            ans ="Not Found";
+        
+         return ans;
+    }
+
+    /**
+     * This shows all prime numbers up to the given number
+     * @param x
+     * @return
+     */
+    private static  String primesSieve(int x){
+        String primes = "";
+        List<Integer> asList = new ArrayList();
+        
+        if(x >= 2)
+            asList.add(2);
+
+        for (int i = 3; i <= x ; i++) {
+            if(i % 2 > 0)
+                asList.add(i);
+            
+        }
+        
+        List<Integer> newList = new ArrayList<>();      
+        for (int i =0; i < asList.size(); i++) {
+            int a = asList.get(i);          
+            for (int j = i + 1; j < asList.size(); j++) {
+                if (a > 1 && ((asList.get(j) % a) == 0))
+                    asList.set(j, 1);
+            }
+        }
+            
+        newList = asList.stream().filter(i -> i != 1).collect(Collectors.<Integer>toList());
+        return Arrays.toString(newList.toArray());
+    }
+    /**
+     * This method shows a permutation of sets of all members fo the array
+     * every possible array combination
+     * @param values
+     * @return
+     */
+    private static String powerSet(int[] values ){
+        StringBuilder results  = new StringBuilder();
+        String[] configArrays = new String[(int) (Math.pow(2 , values.length))];
+        
+        for (int i = 0; i < configArrays.length ; i++) {
+            String binaryRe = Integer.toBinaryString(i);
+            
+            while (binaryRe.length() < values.length)
+                binaryRe = "0" + binaryRe;
+            
+            configArrays[i] = binaryRe;
+        }
+        
+        
+        for (int i = 0; i <configArrays.length ; i++) {
+            List tempArray = new ArrayList<Integer>();
+            
+            for (int j = 0; j < configArrays[i].length(); j++) {
+                if(configArrays[i].toCharArray()[j] == '1')
+                    tempArray.add(values[j]);                    
+            }
+                      
+            results.append(Arrays.toString(tempArray.toArray()) + ", ");
+     
+        }       
+       
+        return results.toString();
+        
+    }
+}
