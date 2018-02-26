@@ -1,0 +1,39 @@
+ /**
+     * ab(a(c)d
+     * ab(a
+     * @param s
+     * @return
+     */
+    private static String balance(String s ){
+        StringBuilder sb = new StringBuilder();        
+        char[] c = s.toCharArray();
+        Stack<Character> stack = new Stack<>();
+        Stack<Integer> stacki = new Stack<>();  
+        
+        for (int i = 0; i < c.length ; i++) {
+            if(c[i] == '(') {
+                stack.push('(');
+                stacki.push(i);
+            }
+            if(c[i] == ')'){                
+                if(!stack.empty()){                 
+                    stack.pop();
+                    stacki.pop();
+                }else{
+                    c[i] = ' ';                }                
+            }          
+        }
+
+       while(stacki.size() >0){
+             int x = stacki.pop();   
+             c[x] = ' ';
+        }        
+
+        for (int i = 0; i < c.length; i++) {
+            if(c[i] != ' ')
+                sb.append(c[i]);
+        }
+        
+        return sb.toString();
+    }
+    
